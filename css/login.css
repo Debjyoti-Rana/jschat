@@ -1,0 +1,59 @@
+body section.loginbg {
+    position: absolute;
+    height: 100vh;
+    width: 100%;
+    background-color: rgba(0,0,0,0.1);
+    z-index: 100;
+    overflow-y: hidden;
+}
+body div.loginform{
+    height: 50vh;
+    width: 90%;
+    background-color: white;
+    border-radius: 12px;
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-height: 300px;
+
+}
+.headinglogin{
+    color: black;
+    text-align: center;
+    padding-top: 20px;
+    font-weight: 900;
+    font-size: 30px;
+    text-decoration: solid;
+}
+.chat-section{
+    filter: blur(10px);
+  -webkit-filter: blur(10px);
+
+}
+.bicon{
+    color:black;
+    text-align: left;
+
+}
+a.buttonl{
+    position: absolute;
+    background:#4285F4;
+    padding: 15px;
+    max-width: 200px;
+    text-decoration: none;
+    color: white !important;;
+    border-radius: 5px;
+    margin:10px auto;
+    align-items: center;
+    font-size: large;
+    font-weight: 800;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+form.cc{
+    align-items: center;
+    text-align: center;
+}

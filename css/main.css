@@ -1,0 +1,41 @@
+/* profile css start here */
+#profileImg{
+    border: 5px solid white;
+    border-radius: 50%;
+    height: 200px;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+}
+#profileName{
+    position: relative;
+    /* left: 50%; */
+    text-align: center;
+    text-transform: capitalize;
+    font-size: larger;
+    font-weight: 800;
+    color:black;
+    /* transform: translateX(-50%); */
+}
+.profileSubtext{
+    position: relative;
+    font-size: 14px;
+    text-align: left;
+    font-weight: 800;
+    font-family:monospace;
+    padding:10px 10px 5px 10px;
+    /* border: 3px solid green; */
+}
+.profileSubtext i{
+    padding-right: 10px;
+}
+.profileText{
+    position: relative;
+    font-size: 18px;
+    text-align: justify;
+    padding: 0px 5px 5px 20px;
+    font-family:'Times New Roman', Times, serif;
+    font-weight: 500;
+}
+
+/* profile css end here */
