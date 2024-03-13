@@ -1,5 +1,5 @@
 import { app, appName, cid } from "./config.js";
-import { getFirestore, doc, getDoc,getDocs, setDoc, addDoc, collection, Timestamp, serverTimestamp, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, doc, getDoc,getDocs, setDoc, addDoc, collection, Timestamp, serverTimestamp, updateDoc, onSnapshot} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { getDatabase, set, ref, child, get,update, serverTimestamp as sT } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 const database = getDatabase(app);
 
@@ -315,7 +315,9 @@ let getMessage = async (chatid) => {
     } else {
         return false;
     }
+
 }
+
 let getUserProfile = async (profileid) => {
     const docRef = doc(db, "profile", profileid);
     const docSnap = await getDoc(docRef);
@@ -480,18 +482,18 @@ class chat {
             objR = obj;    
         });
         getUpdateMenu(CID).then(obj =>{
+            // console.log(obj)
             if(obj!=false){
-                console.log(obj,objR);
+                // console.log(obj,objR);
                 let offset = parseInt(obj.mid) - parseInt(obj[chatid[0]].offset);
                 let time =  (new Date(obj.time * 1000)).toString().split(" ")[4].split(":").slice(0,2).join(":");
-                console.log(time)
-                // if(obj==false){
-                //     initUpdateMenu(CID,others[0])
-                // }
-                // else{
-                //     // let offset = obj.mid - (obj.chatid[1].offset);
-                    this.conversationMenu(CID,objR.imageUrl,objR.name,obj.lastMessage,offset,time)
-                // }
+                // console.log(obj.time)
+                // console.log(time)
+                this.conversationMenu(CID,objR.imageUrl,objR.name,obj.lastMessage,offset,time)
+                
+            }else{
+                //if realtime db is not initlialise then init rtdbms
+                initUpdateMenu(CID,chatid);
             }
         });
         
@@ -500,10 +502,18 @@ class chat {
         //get mesessage CID
         //const CID = "152672f7682214f6c0aacdf695086594";
         // let objR;
-        getMessage(CID).then(obj=>{
+        // getMessage(CID).then(obj=>{
+            
+        // });
+        const unsub = onSnapshot(doc(db, "chat", CID), (doc) => {
+            const obj = doc.data();
             const objR = beautifyObject(obj);
             this.conversationMain(CID,objR,...others)
         });
+        // getMessage(CID).then(obj=>{
+        //     const objR = beautifyObject(obj);
+        //     this.conversationMain(CID,objR,...others)
+        // });
         
 
     }
@@ -831,9 +841,7 @@ class chat {
             for(let n in object[dividerDate]){
                 for(let uid in object[dividerDate][n]){
                     const obje = object[dividerDate][n][uid];
-                    // console.log(uid == others[1][1])
-                    // console.log(uid,"==",others[1][1]
-                    // console.log(others)
+                   
                     
                     conversationWrapper.appendChild(this.conversationWrapperA(obje,(uid == others[0][1]),conversion_id));
 
@@ -848,16 +856,26 @@ class chat {
         
         const activeId = document.querySelector(`#${conversion_id} .conversation-main`);
         // console.log(activeId)
-        activeId.appendChild(conversationWrapper);
+        activeId.innerHTML = conversationWrapper.outerHTML;
+        activeId.scrollTop = activeId.scrollHeight;
+        // activeId.appendChild(conversationWrapper);
 
+        // const ulElement = document.getElementById("yourULElementId");
 
+        // console.log(ulElement.toString()); // This will output: [object HTMLUListElement]
+        // console.log(ulElement.innerHTML); // This will output the HTML content inside the <ul> element.
+        // console.log(ulElement.outerHTML); // This will output the HTML content of the entire <ul> element, including the <ul> tags themselves.
+        // console.log(ulElement.textContent); // This will output the text content of the <ul> element, without any HTML tags.
+        
     }
 
 }
 
 
-const getMenu = async()=>{
-    const docRef = doc(db, "menu", sessionStorage.getItem('currentUserId'));
+
+const getMenu = async(uid)=>{
+    console.log()
+    const docRef = doc(db, "menu", uid);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
         return docSnap.data();

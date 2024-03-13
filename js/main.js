@@ -7,7 +7,8 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
-
+// const currentUserId = await auth.currentUser;
+// console.log(currentUserId)
 // auth.currentUser.updatePhoneNumber('+11234567890');
 // const getCurrentUser = async () => {
 //   let currentUser;
@@ -551,18 +552,17 @@ let getUser = async (chatid) => {
 /*Chat Menu start Here */
 import { getMenu, chat as chart , newuserfound} from "./chat.js";
 
-const getCuser = sessionStorage.getItem('currentUserId');
+const currentUserId = sessionStorage.getItem('currentUserId');
 /** GET The current user from session storage */
-getMenu().then(chat => {
+getMenu(currentUserId).then(chat => {
   /*Get the menu and display*/
   for (let key in chat) {
     let to_uid = chat[key].ref.split("/")[2];
-    let chatid = [getCuser, to_uid]
-    console.log(chatid);
+    let chatid = [currentUserId, to_uid]
+    // console.log(chatid);
     // let conversation_Menu = new chart(to_uid,getCuser);
     let conversation_Menu = new chart(chatid);
   }
-
 
 
 });
