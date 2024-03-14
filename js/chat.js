@@ -473,29 +473,30 @@ class chat {
         const chat_main = document.getElementById("chat-main");
         chat_main.appendChild(conversation);
     }
-    initTopBottom(chatid,CID){
+    async initTopBottom(chatid,CID){
         let objR;
-         getUserProfile(chatid[1]).then(obj =>{
+        await getUserProfile(chatid[1]).then(obj =>{
             // console.log(obj)
             this.conversationHead(CID,obj.name, obj.imageUrl,true);
             this.conversationButtoms(CID,chatid)
-            objR = obj;    
+            objR = obj;
+            getUpdateMenu(CID).then(obj =>{
+                // console.log(obj)
+                if(obj!=false){
+                    // console.log(obj,objR);
+                    let offset = parseInt(obj.mid) - parseInt(obj[chatid[0]].offset);
+                    let time =  (new Date(obj.time * 1000)).toString().split(" ")[4].split(":").slice(0,2).join(":");
+                    // console.log(obj.time)
+                    // console.log(time)
+                    this.conversationMenu(CID,objR.imageUrl,objR.name,obj.lastMessage,offset,time)
+                    
+                }else{
+                    //if realtime db is not initlialise then init rtdbms
+                    initUpdateMenu(CID,chatid);
+                }
+            });    
         });
-        getUpdateMenu(CID).then(obj =>{
-            // console.log(obj)
-            if(obj!=false){
-                // console.log(obj,objR);
-                let offset = parseInt(obj.mid) - parseInt(obj[chatid[0]].offset);
-                let time =  (new Date(obj.time * 1000)).toString().split(" ")[4].split(":").slice(0,2).join(":");
-                // console.log(obj.time)
-                // console.log(time)
-                this.conversationMenu(CID,objR.imageUrl,objR.name,obj.lastMessage,offset,time)
-                
-            }else{
-                //if realtime db is not initlialise then init rtdbms
-                initUpdateMenu(CID,chatid);
-            }
-        });
+        
         
     }
     initDisplay(CID,...others){
@@ -919,6 +920,7 @@ let newuserfound=(uid,img,name,username)=>{
                 object2[CID]={ref:`/profile/${nuid}`};
                 await updateDoc(doc(db, "menu", nuid), object1);
                 await updateDoc(doc(db, "menu", cuid), object2);
+                document.querySelector('a[data-drl="Dchats"]').click();
             }catch(e){
                 console.log(e)
             }

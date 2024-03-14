@@ -1,6 +1,6 @@
 import { app, appName, md5, cid } from "./config.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, getDoc, getDocs, query, where,  DocumentReference, setDoc, addDoc, collection, Timestamp, serverTimestamp, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, doc, getDoc, getDocs, query, where,  DocumentReference, setDoc, addDoc, collection, Timestamp, serverTimestamp, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { getStorage, ref as sref, uploadBytesResumable, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js';
 // import {__chatmain__} from './chat.js';
 const auth = getAuth(app);
@@ -552,20 +552,49 @@ let getUser = async (chatid) => {
 /*Chat Menu start Here */
 import { getMenu, chat as chart , newuserfound} from "./chat.js";
 
-const currentUserId = sessionStorage.getItem('currentUserId');
+const currentUserId = sessionStorage.getItem('currentUserId'),current_menu_uid = [];
+console.log(currentUserId)
 /** GET The current user from session storage */
-getMenu(currentUserId).then(chat => {
+// getMenu(currentUserId).then(chat => {
+//   /*Get the menu and display*/
+//   let current_menu_uid = [];
+//   for (let key in chat) {
+//     let to_uid = chat[key].ref.split("/")[2];
+    
+//       current_menu_uid.push(to_uid);
+//       let chatid = [currentUserId, to_uid];
+//       let conversation_Menu = new chart(chatid);
+      
+//       if(!current_menu_uid.includes(to_uid)){}
+//   }
+  
+// });
+
+const chatmenu_websocket = onSnapshot(doc(db, "menu", currentUserId), (doc) => {
+  const chat = doc.data()
+  // console.log(chat)
   /*Get the menu and display*/
   for (let key in chat) {
     let to_uid = chat[key].ref.split("/")[2];
-    let chatid = [currentUserId, to_uid]
-    // console.log(chatid);
-    // let conversation_Menu = new chart(to_uid,getCuser);
-    let conversation_Menu = new chart(chatid);
+      if(!current_menu_uid.includes(to_uid)){
+        current_menu_uid.push(to_uid);
+      let chatid = [currentUserId, to_uid];
+      let conversation_Menu = new chart(chatid);
+      }
   }
-
-
 });
+
+// const chatmenu_websocket = onSnapshot(doc(db, "menu", currentUserId), (doc) => {
+//   // console.log("Current data: ", doc.data());
+//   const chat = doc.data();
+//   for (let key in chat) {
+//     let to_uid = chat[key].ref.split("/")[2];
+//     let chatid = [currentUserId, to_uid]
+//     // console.log(chatid);
+//     // let conversation_Menu = new chart(to_uid,getCuser);
+//     let conversation_Menu = new chart(chatid);
+//   }
+// });
 /*Chat Menu end Here */
 
 
