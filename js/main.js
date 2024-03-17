@@ -6,35 +6,21 @@ import { getStorage, ref as sref, uploadBytesResumable, getDownloadURL } from 'h
 const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
-
-// const currentUserId = await auth.currentUser;
-// console.log(currentUserId)
-// auth.currentUser.updatePhoneNumber('+11234567890');
-// const getCurrentUser = async () => {
-//   let currentUser;
-//   onAuthStateChanged(auth, function (user) {
-//     if (user) currentUser = user;
-//     else currentUser = false;
-//   });
-//   return currentUser;
-// }
-// check the user is login or not if not then it redirect to login.html page
+document.getElementById("__preloader__").style.display="block";
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    // this.user = user;
-    // User is signed in, see docs for a list of available properties
-    // https://firebase.google.com/docs/reference/js/auth.user
     const uid = user.uid;
     sessionStorage.setItem('currentUserId', uid);
     const displayName = user.displayName;
     profileDisplay(user);
     profileInsert(uid, displayName, null, `Hey There I am using ${appName}!`, user.photoURL)
-    //  __chatmain__(user);
-    // roomid(uid,null)
+    document.getElementById("__preloader__").style.display="None";
+    
   } else {
     // User is signed out
     window.location.href = "./login.html"
   }
+  
 
 });
 
@@ -572,8 +558,6 @@ console.log(currentUserId)
 
 const chatmenu_websocket = onSnapshot(doc(db, "menu", currentUserId), (doc) => {
   const chat = doc.data()
-  // console.log(chat)
-  /*Get the menu and display*/
   for (let key in chat) {
     let to_uid = chat[key].ref.split("/")[2];
       if(!current_menu_uid.includes(to_uid)){
